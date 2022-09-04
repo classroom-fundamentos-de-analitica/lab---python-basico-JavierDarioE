@@ -21,7 +21,17 @@ def pregunta_01():
     214
 
     """
-    return
+    path = "./data.csv"
+    with open(path, mode='r') as file:
+        line = file.readline()
+        result = int(line.split("\t")[1])
+        while line:
+            line = file.readline()
+            if line != "":
+                result += int(line.split("\t")[1])
+            else:
+                break
+    return result
 
 
 def pregunta_02():
@@ -39,8 +49,17 @@ def pregunta_02():
     ]
 
     """
-    return
-
+    path = "./data.csv"
+    with open(path, mode='r') as file:
+        characters_list = []
+        file_line = file.readline()
+        while file_line != "":
+            characters_list.append(file_line[0])
+            file_line = file.readline()
+    characters = list(set(characters_list))
+    characters.sort()
+    count_list = [(letter, characters_list.count(letter)) for letter in characters]
+    return count_list
 
 def pregunta_03():
     """
