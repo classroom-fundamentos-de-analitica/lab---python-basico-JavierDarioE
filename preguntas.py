@@ -312,7 +312,7 @@ def pregunta_09():
     counter = {}
     for key in content:
         counter[key] = counter.get(key, 0) + 1
-    return sort_by_index(list(counter.items()), 0)
+    return counter
 
 
 def pregunta_10():
@@ -360,10 +360,13 @@ def pregunta_11():
     """
     path = "./data.csv"
     content = return_as_list(read_file(path))
-    content = [[line[1], line[3]] for line in content]
-    return content
+    content = [(line[1], line[3]) for line in content]
+    content = [(letter, (int(line[0]))) for line in content for letter in line[1].split(",")]
+    counter = {}
+    for key, value in content:
+        counter[key] = counter.get(key, 0) + value
+    return counter
 
-# print("Pregunta 11:\n", pregunta_11(), "\n")
 
 
 def pregunta_12():
