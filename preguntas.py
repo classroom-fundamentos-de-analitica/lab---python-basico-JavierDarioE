@@ -160,7 +160,7 @@ def pregunta_05():
     """
     path = "./data.csv"
     content = return_as_list(read_file(path))
-    content = [[line[0], line[1]] for line in content]
+    content = [[line[0], int(line[1])] for line in content]
     min_max = {}
     for line in content:
         if line[0] in min_max:
@@ -368,7 +368,6 @@ def pregunta_11():
     return counter
 
 
-
 def pregunta_12():
     """
     Genere un diccionario que contengan como clave la columna 1 y como valor la suma de
@@ -392,4 +391,3 @@ def pregunta_12():
     for key, value in content:
         counter[key] = counter.get(key, 0) + value
     return counter
-
