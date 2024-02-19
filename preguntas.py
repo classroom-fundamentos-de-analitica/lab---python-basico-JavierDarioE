@@ -11,6 +11,25 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
+from operator import itemgetter
+
+
+def read_file(path):
+    with open(path, "r") as file:
+        lines = file.readlines()
+    return lines
+
+
+def return_as_list(content):
+    content_as_list = [line.replace("\n", "") for line in content]
+    content_as_list = [line.split("\t") for line in content_as_list]
+    return content_as_list
+
+
+def sort_by_index(sequence, index):
+    f = itemgetter(index)
+    sequence = sorted(sequence, key=f)
+    return sequence
 
 
 def pregunta_01():
@@ -21,7 +40,17 @@ def pregunta_01():
     214
 
     """
-    return
+    path = "./data.csv"
+    with open(path, mode='r') as file:
+        line = file.readline()
+        result = int(line.split("\t")[1])
+        while line:
+            line = file.readline()
+            if line != "":
+                result += int(line.split("\t")[1])
+            else:
+                break
+    return result
 
 
 def pregunta_02():
@@ -39,7 +68,17 @@ def pregunta_02():
     ]
 
     """
-    return
+    path = "./data.csv"
+    with open(path, mode='r') as file:
+        characters_list = []
+        file_line = file.readline()
+        while file_line != "":
+            characters_list.append(file_line[0])
+            file_line = file.readline()
+    characters = list(set(characters_list))
+    characters.sort()
+    count_list = [(letter, characters_list.count(letter)) for letter in characters]
+    return count_list
 
 
 def pregunta_03():
@@ -57,7 +96,14 @@ def pregunta_03():
     ]
 
     """
-    return
+    path = "./data.csv"
+    content = return_as_list(read_file(path))
+    content = [[line[0], int(line[1])] for line in content]
+    sum_of_values = {}
+    for key, value in content:
+        sum_of_values[key] = sum_of_values.get(key, 0) + value
+    content = list(sum_of_values.items())
+    return sort_by_index(content, 0)
 
 
 def pregunta_04():
@@ -82,7 +128,19 @@ def pregunta_04():
     ]
 
     """
-    return
+    path = "./data.csv"
+    dates = []
+    with open(path, mode='r') as file:
+        line = file.readline()
+        while line != "":
+            date = line.split("\t")[2]
+            dates.append(date)
+            line = file.readline()
+    months = [date.split("-")[1] for date in dates]
+    months_unique = list(set(months))
+    months_unique.sort()
+    month_count = [(month, months.count(month)) for month in months_unique]
+    return month_count
 
 
 def pregunta_05():
@@ -100,7 +158,21 @@ def pregunta_05():
     ]
 
     """
-    return
+    path = "./data.csv"
+    content = return_as_list(read_file(path))
+    content = [[line[0], int(line[1])] for line in content]
+    min_max = {}
+    for line in content:
+        if line[0] in min_max:
+            if min_max[line[0]][0] < line[1]:
+                min_max[line[0]][0] = line[1]
+            elif min_max[line[0]][1] > line[1]:
+                min_max[line[0]][1] = line[1]
+        else:
+            min_max[line[0]] = [line[1], line[1]]
+    min_max_list = [(key, value[0], value[1]) for key, value in min_max.items()]
+    min_max_list = sort_by_index(min_max_list, 0)
+    return min_max_list
 
 
 def pregunta_06():
@@ -125,7 +197,21 @@ def pregunta_06():
     ]
 
     """
-    return
+    path = "./data.csv"
+    content = return_as_list(read_file(path))
+    content = [items for line in content for items in line[4].split(",")]
+    content = [item.split(":") for item in content]
+    counter = {}
+    for key, value in content:
+        if key in counter:
+            if int(value) < counter[key][0]:
+                counter[key][0] = int(value)
+            elif int(value) > counter[key][1]:
+                counter[key][1] = int(value)
+        else:
+            counter[key] = [int(value), int(value)]
+    counter = [(key, value[0], value[1]) for key, value in counter.items()]
+    return sort_by_index(counter, 0)
 
 
 def pregunta_07():
@@ -149,7 +235,17 @@ def pregunta_07():
     ]
 
     """
-    return
+    path = "./data.csv"
+    content = return_as_list(read_file(path))
+    content = [[line[0], int(line[1])] for line in content]
+    counter = {}
+    for value, key in content:
+        if key in counter:
+            counter[key].append(value)
+        else:
+            counter[key] = [value]
+
+    return sort_by_index(list(counter.items()), 0)
 
 
 def pregunta_08():
@@ -174,7 +270,18 @@ def pregunta_08():
     ]
 
     """
-    return
+    path = "./data.csv"
+    content = return_as_list(read_file(path))
+    content = [[line[0], int(line[1])] for line in content]
+    counter = {}
+    for value, key in content:
+        if key in counter:
+            if value not in counter[key]:
+                counter[key].append(value)
+        else:
+            counter[key] = [value]
+    counter = {key: sorted(value) for key, value in counter.items()}
+    return sort_by_index(list(counter.items()), 0)
 
 
 def pregunta_09():
@@ -197,7 +304,15 @@ def pregunta_09():
     }
 
     """
-    return
+    path = "./data.csv"
+    content = return_as_list(read_file(path))
+    content = [line[4] for line in content]
+    content = [line.split(",") for line in content]
+    content = [element.split(":")[0] for line in content for element in line]
+    counter = {}
+    for key in content:
+        counter[key] = counter.get(key, 0) + 1
+    return counter
 
 
 def pregunta_10():
@@ -218,7 +333,11 @@ def pregunta_10():
 
 
     """
-    return
+    path = "./data.csv"
+    content = return_as_list(read_file(path))
+    content = [(line[0], line[3], line[4]) for line in content]
+    content = [(letter, len(letters.split(",")), len(dictionary.split(","))) for letter, letters, dictionary in content]
+    return content
 
 
 def pregunta_11():
@@ -239,7 +358,14 @@ def pregunta_11():
 
 
     """
-    return
+    path = "./data.csv"
+    content = return_as_list(read_file(path))
+    content = [(line[1], line[3]) for line in content]
+    content = [(letter, (int(line[0]))) for line in content for letter in line[1].split(",")]
+    counter = {}
+    for key, value in content:
+        counter[key] = counter.get(key, 0) + value
+    return counter
 
 
 def pregunta_12():
@@ -257,4 +383,11 @@ def pregunta_12():
     }
 
     """
-    return
+    path = "./data.csv"
+    content = return_as_list(read_file(path))
+    content = [[line[0], line[4]] for line in content]
+    content = [[letter, int(element.split(":")[1])] for [letter, values] in content for element in values.split(",")]
+    counter = {}
+    for key, value in content:
+        counter[key] = counter.get(key, 0) + value
+    return counter
